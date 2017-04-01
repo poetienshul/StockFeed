@@ -1,11 +1,26 @@
-import requests 
+import csv
 
-password = "347a3af09d984f40aa7c18d811745b83"
-url = "https://api.cognitive.microsoft.com/bing/v5.0/news/search?q=Sears Holding Company&count=10&offset=0&mkt=en-us&safeSearch=Off&freshness=month"
-headers = {'Ocp-Apim-Subscription-Key' : password}
-r = requests.get(url, headers=headers)
-print (r.status_code)
-data = r.json()
-for entry in data['value']:
-	print (entry['url'] + "\n")
+
+tickers = open('secwiki_tickers.csv', 'r')
+reader = csv.reader(tickers)
+fo = open('out.csv','w')
+
+for line in reader:
+	k,v = line
+	v = v.replace("Inc.", "")
+	v = v.replace(",","")
+	v = v.replace("Corporation", "")
+	v = v.replace("Corp.", "")
+	v = v.replace("Group", "")
+	v = v.replace("Co.", "")
+	v = v.replace("Holdings","")
+	v = v.replace("Group","")
+	v = v.replace("Ltd.","")
+	v = v.replace("Company","")
+	v = v.replace("Holdings","")
 	
+	newline = k + "," + v + "\n"
+	fo.write(newline)
+	
+tickers.close()
+fo.close()
